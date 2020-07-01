@@ -25,6 +25,8 @@ Table of Contents
 
 ### Breaking Changes
 
+* Reports before version 1.12.0 cannot be loaded anymore. Simply re-run your tests with the new recheck version to create them again.
+
 ### Bug Fixes
 
 * Fix a rare `java.nio.file.FileSystemAlreadyExistsException` when accessing filters concurrently.

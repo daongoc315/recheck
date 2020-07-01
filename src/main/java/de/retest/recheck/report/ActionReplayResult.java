@@ -18,6 +18,7 @@ import de.retest.recheck.report.action.DifferenceRetriever;
 import de.retest.recheck.report.action.WindowRetriever;
 import de.retest.recheck.ui.actions.Action;
 import de.retest.recheck.ui.actions.ActionExecutionResult;
+import de.retest.recheck.ui.actions.ExceptionWrapper;
 import de.retest.recheck.ui.descriptors.Element;
 import de.retest.recheck.ui.descriptors.RootElement;
 import de.retest.recheck.ui.descriptors.SutState;
@@ -45,7 +46,7 @@ import lombok.Getter;
 @XmlAccessorType( XmlAccessType.FIELD )
 public class ActionReplayResult implements Serializable {
 
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 
 	@XmlAttribute
 	private final String description;
@@ -54,6 +55,8 @@ public class ActionReplayResult implements Serializable {
 
 	@XmlElement
 	private final Element targetcomponent;
+
+	private final ExceptionWrapper error;
 
 	@XmlElement
 	private final StateDifference stateDifference;
@@ -73,13 +76,14 @@ public class ActionReplayResult implements Serializable {
 		description = null;
 		goldenMasterPath = null;
 		targetcomponent = null;
+		error = null;
 		stateDifference = null;
 		metadataDifference = MetadataDifference.empty();
 		windows = null;
 	}
 
 	protected ActionReplayResult( final ActionReplayData data, final WindowRetriever windows,
-			final DifferenceRetriever difference, final long duration ) {
+			final DifferenceRetriever difference, final Throwable error, final long duration ) {
 		if ( windows.isNull() && difference.isNull() ) {
 			throw new NullPointerException(
 					"ActionReplayResult must not be empty! Affected action: " + data.getDescription() + "." );
@@ -87,6 +91,7 @@ public class ActionReplayResult implements Serializable {
 		description = data.getDescription();
 		goldenMasterPath = data.getGoldenMasterPath();
 		targetcomponent = data.getElement();
+		this.error = error != null ? new ExceptionWrapper( error ) : null;
 		this.windows = windows.get();
 		stateDifference = difference.getStateDifference();
 		metadataDifference = difference.getMetadataDifference();
@@ -105,7 +110,11 @@ public class ActionReplayResult implements Serializable {
 
 	public static ActionReplayResult withDifference( final ActionReplayData data, final WindowRetriever windows,
 			final DifferenceRetriever difference, final long duration ) {
-		return new ActionReplayResult( data, windows, difference, duration );
+		return new ActionReplayResult( data, windows, difference, null, duration );
+	}
+
+	public static ActionReplayResult withError( final ActionReplayData data, final Throwable error ) {
+		return new ActionReplayResult( data, WindowRetriever.empty(), DifferenceRetriever.empty(), error, 0L );
 	}
 
 	public StateDifference getStateDifference() {

@@ -22,7 +22,7 @@ public class NoGoldenMasterActionReplayResult extends ActionReplayResult {
 	public NoGoldenMasterActionReplayResult( final String currentStep, final SutState actual,
 			final String goldenMasterPath ) {
 		super( ActionReplayData.withoutTarget( currentStep, goldenMasterPath ), WindowRetriever.empty(),
-				DifferenceRetriever.of( toStateDifference( actual ) ), 0L );
+				DifferenceRetriever.of( toStateDifference( actual ) ), null, 0L );
 	}
 
 	private static StateDifference toStateDifference( final SutState actual ) {
