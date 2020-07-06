@@ -113,10 +113,7 @@ public class RecheckImpl implements Recheck, SutStateLoader {
 			logger.warn( "Please call 'startTest()' before performing a check." );
 			startTest();
 		}
-
-		final ActionReplayResult actionReplayResult = createActionReplayResult( toVerify, adapter, currentStep );
-
-		currentTestResult.addAction( actionReplayResult );
+		currentTestResult.addAction( createActionReplayResult( toVerify, adapter, currentStep ) );
 	}
 
 	protected ActionReplayResult createActionReplayResult( final Object toVerify, final RecheckAdapter adapter,
