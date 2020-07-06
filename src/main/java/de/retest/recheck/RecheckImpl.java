@@ -23,6 +23,7 @@ import de.retest.recheck.report.ActionReplayResult;
 import de.retest.recheck.report.SuiteReplayResult;
 import de.retest.recheck.report.TestReplayResult;
 import de.retest.recheck.report.TestReportFilter;
+import de.retest.recheck.report.action.ActionReplayData;
 import de.retest.recheck.ui.DefaultValueFinder;
 import de.retest.recheck.ui.descriptors.SutState;
 import de.retest.recheck.ui.diff.LeafDifference;
@@ -113,7 +114,12 @@ public class RecheckImpl implements Recheck, SutStateLoader {
 			logger.warn( "Please call 'startTest()' before performing a check." );
 			startTest();
 		}
-		currentTestResult.addAction( createActionReplayResult( toVerify, adapter, currentStep ) );
+		try {
+			currentTestResult.addAction( createActionReplayResult( toVerify, adapter, currentStep ) );
+		} catch ( Exception e ) {
+			currentTestResult
+					.addAction( ActionReplayResult.withError( ActionReplayData.withoutTarget( currentStep ), e ) );
+		}
 	}
 
 	protected ActionReplayResult createActionReplayResult( final Object toVerify, final RecheckAdapter adapter,
