@@ -28,7 +28,8 @@ Table of Contents
 ### Bug Fixes
 
 * Fix a rare `java.nio.file.FileSystemAlreadyExistsException` when accessing filters concurrently.
-* Fix 1-click-maintenance not respecting the key of the `AttributeDifference`. 
+* Fix 1-click-maintenance not respecting the key of the `AttributeDifference`.
+* Fix some cases where applying deleted elements would not remove them from the Golden Master.
 
 ### New Features
 
