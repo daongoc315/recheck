@@ -83,6 +83,12 @@ public class XmlTransformer {
 			marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, true );
 			marshaller.setProperty( MarshallerProperties.NAMESPACE_PREFIX_MAPPER,
 					new MapNamespacePrefixMapper( NAMESPACE_MAPPINGS ) );
+
+			if ( !config.isOnlyFragment() ) {
+				marshaller.setProperty( Marshaller.JAXB_FRAGMENT, true );
+				marshaller.setProperty( "com.sun.xml.bind.xmlHeaders", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
+			}
+
 			marshaller.setProperty( MarshallerProperties.INDENT_STRING, "\t" );
 			marshaller.setEventHandler( new DefaultValidationEventHandler() );
 			marshaller.setListener( listener );
